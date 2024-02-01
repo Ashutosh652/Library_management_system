@@ -10,10 +10,10 @@ class Book(models.Model):
 
 
 class BookDetails(models.Model):
-    number_of_pages = models.IntegerField()
-    publisher = models.CharField(max_length=255)
-    language = models.CharField(max_length=50)
-    book = models.OneToOneField(Book, on_delete=models.CASCADE)
+    number_of_pages = models.IntegerField(null=True, blank=True)
+    publisher = models.CharField(max_length=255, null=True, blank=True)
+    language = models.CharField(max_length=50, null=True, blank=True)
+    book = models.OneToOneField(Book, on_delete=models.CASCADE, related_name="details")
 
 
 class BorrowedBooks(models.Model):

@@ -9,19 +9,10 @@ class UserListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "detail", "email", "first_name", "last_name")
+        fields = ("id", "detail", "email", "first_name", "last_name", "membership_date")
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = (
-            "id",
-            "email",
-            "first_name",
-            "last_name",
-            "membership_date",
-            "is_staff",
-            "is_active",
-            "is_superuser",
-        )
+        fields = ("id", "email", "first_name", "last_name", "membership_date")

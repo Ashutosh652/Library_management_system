@@ -1,4 +1,6 @@
+from datetime import datetime
 from django.db import models
+from django.core.exceptions import ValidationError
 from account.models import User
 
 
@@ -17,7 +19,22 @@ class BookDetails(models.Model):
 
 
 class BorrowedBooks(models.Model):
-    borrow_date = models.DateField()
-    return_date = models.DateField()
+    borrow_date = models.DateField(null=False, default=datetime.today())
+    return_date = models.DateField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ["user", "book"]
+
+    def clean(self):
+        # Validate that a user cannot borrow the same book more than once
+        existing_borrowed_book = BorrowedBooks.objects.filter(
+            user=self.user, book=self.book
+        ).exclude(pk=self.pk)
+        if existing_borrowed_book.exists():
+            raise ValidationError("This user has already borrowed the same book.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)

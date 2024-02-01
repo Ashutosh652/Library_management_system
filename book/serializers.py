@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from book.models import Book, BookDetails
+from book.models import Book, BookDetails, BorrowedBooks
 
 
 class BookListSerializer(serializers.ModelSerializer):
@@ -62,3 +62,25 @@ class BookDetailSerializer(serializers.ModelSerializer):
         details_instance.save()
 
         return instance
+
+
+class BorrowedBooksListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BorrowedBooks
+        fields = ("id", "user", "book", "borrow_date", "return_date")
+
+
+class BorrowBookSerializer(serializers.Serializer):
+    """Serializer for request body for borrowing a book."""
+
+    user_id = serializers.IntegerField()
+    book_id = serializers.IntegerField()
+    borrow_date = serializers.DateField()
+
+
+class ReturnBookSerializer(serializers.Serializer):
+    """Serializer for request body for returning a book."""
+
+    user_id = serializers.IntegerField()
+    book_id = serializers.IntegerField()
+    return_date = serializers.DateField()

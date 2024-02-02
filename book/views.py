@@ -6,7 +6,7 @@ from rest_framework.mixins import (
     CreateModelMixin,
     UpdateModelMixin,
 )
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
@@ -49,6 +49,13 @@ class BookView(
             if self.action in serializer_action_classes
             else self.serializer_class
         )
+
+    def get_permissions(self):
+        if self.action == "retrieve":
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = self.permission_classes
+        return [permission() for permission in permission_classes]
 
 
 class BorrowedBooksView(GenericViewSet, ListModelMixin):

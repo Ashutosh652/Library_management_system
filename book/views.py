@@ -19,6 +19,12 @@ from book.serializers import (
     BorrowBookSerializer,
     ReturnBookSerializer,
 )
+from rest_framework.authentication import SessionAuthentication
+
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
 
 
 class BookView(
@@ -33,6 +39,7 @@ class BookView(
     queryset = Book.objects.all()
     serializer_class = BookListSerializer
     permission_classes = [AllowAny]
+    authentication_classes = [CsrfExemptSessionAuthentication]
     lookup_field = "id"
 
     def get_serializer_class(self):
@@ -50,13 +57,6 @@ class BookView(
             else self.serializer_class
         )
 
-    def get_permissions(self):
-        if self.action == "retrieve":
-            permission_classes = [IsAuthenticated]
-        else:
-            permission_classes = self.permission_classes
-        return [permission() for permission in permission_classes]
-
 
 class BorrowedBooksView(GenericViewSet, ListModelMixin):
     """View to create/retrieve/list borrowed books."""
@@ -64,6 +64,7 @@ class BorrowedBooksView(GenericViewSet, ListModelMixin):
     queryset = BorrowedBooks.objects.all()
     serializer_class = BorrowedBooksListSerializer
     permission_classes = [AllowAny]
+    authentication_classes = [CsrfExemptSessionAuthentication]
 
     @extend_schema(request=BorrowBookSerializer, responses=BorrowedBooksListSerializer)
     @action(detail=False, methods=["post"], serializer_class=BorrowBookSerializer)

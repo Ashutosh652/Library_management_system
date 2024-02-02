@@ -6,7 +6,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from account.models import User
-from account.serializers import UserListSerializer, UserDetailSerializer
+from account.serializers import (
+    UserListSerializer,
+    UserDetailSerializer,
+    UserRegisterSerializer,
+)
 from rest_framework.authentication import SessionAuthentication
 
 
@@ -21,6 +25,7 @@ class UserView(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMi
     queryset = User.objects.all()
     serializer_class = UserListSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []
     lookup_field = "id"
 
     def get_serializer_class(self):
@@ -28,6 +33,7 @@ class UserView(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMi
         serializer_action_classes = {
             "list": UserListSerializer,
             "retrieve": UserDetailSerializer,
+            "create": UserRegisterSerializer,
         }
         return (
             serializer_action_classes[self.action]
@@ -38,6 +44,7 @@ class UserView(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMi
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = [CsrfExemptSessionAuthentication]
 
     def post(self, request):
         email = request.data.get("email")

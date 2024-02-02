@@ -58,9 +58,7 @@ Open up the development server. It will open by default on "http://127.0.0.1:800
 
 16. In the admin panel, you will see different tables. One of them is `Sessions`. Click on it and you will see one entry in it with session key, session data and expiry date. This entry is there because you just logged in as the admin.
 
-17. Here is the postman collection in json you can use to test the APIs:
-`https://api.postman.com/collections/21338538-1f4f02fe-e974-4309-8a66-f2e0071a6803?access_key=PMAT-01HNKTSPCX3SMJP03Y89VD3A90`.
-Import the above collection in postman.
+17. I have sent my postman collection to you in the mail. Import the collection in postman.
 
 18. Make sure your django server is running. Now in the postman collection, open the Logout tab and go to headers. You will see one header `Cookie` that contains a session id. Copy the `Session key` from django admin and replace the sessionid in postman Logout tab. Click on `Send`. You will now be logged out. If you try to access the admin panel again, it will prompt you to login again. You can login again.
 
